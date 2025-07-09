@@ -1,0 +1,96 @@
+{% extends 'layout.html' %}
+{% block title %}Buat Motif Batik Kustom{% endblock %}
+{% block content %}
+
+<div id="loading-overlay" style="display: none;">
+    <div id="loading-spinner"></div>
+    <p id="loading-text">AI Sedang Melukis...</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-body p-5">
+                <form id="generate-form" action="{{ url_for('generate') }}" method="post">
+                    
+                    <div class="text-center">
+                        <h1 class="card-title mb-2">Kanvas Digital AI</h1>
+                        <p class="text-muted mb-4">Gunakan preset untuk memulai, lalu sesuaikan sesuka Anda.</p>
+                    </div>
+
+                    <div class="mb-4 text-center">
+                        <label class="form-label fs-5"><strong>Mulai dengan Preset Gaya:</strong></label>
+                        <br>
+                        <button type="button" onclick="applyPreset('klasik-sogan')" class="btn btn-outline-dark m-1">Klasik Sogan</button>
+                        <button type="button" onclick="applyPreset('mega-mendung')" class="btn btn-outline-primary m-1">Mega Mendung</button>
+                        <button type="button" onclick="applyPreset('pesisir-ceria')" class="btn btn-outline-danger m-1">Pesisir Ceria</button>
+                    </div>
+
+                    <hr>
+
+                    <h2 class="text-center mb-4 mt-4">Detail Motif Anda</h2>
+                    <div class="mb-3">
+                        <label for="elemen" class="form-label"><strong>Elemen Utama</strong></label>
+                        <input type="text" class="form-control" id="elemen" name="elemen" placeholder="Contoh: Kura-kura dan rumput laut" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="gaya" class="form-label"><strong>Gaya Desain</strong></label>
+                        <input type="text" class="form-control" id="gaya" name="gaya" placeholder="Contoh: Gaya batik sogan klasik khas keraton" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="warna" class="form-label"><strong>Palet Warna</strong></label>
+                        <input type="text" class="form-control" id="warna" name="warna" placeholder="Contoh: Coklat sogan, krem, hitam" required>
+                    </div>
+
+                    <div class="d-grid mt-4">
+                        <button id="submit-button" type="submit" class="btn btn-primary btn-lg">
+                            Ciptakan Karya!
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Kamus preset gaya kita, sekarang berada di JavaScript
+    const stylePresets = {
+        "klasik-sogan": {
+            "gaya": "gaya batik sogan klasik khas keraton solo dan yogyakarta, sangat detail dan agung",
+            "warna": "palet warna coklat sogan, krem gading, dan hitam pekat"
+        },
+        "mega-mendung": {
+            "gaya": "gaya mega mendung cirebon dengan sentuhan modern dan garis yang bersih",
+            "warna": "palet warna gradasi biru langit, biru tua, dan putih awan bersih"
+        },
+        "pesisir-ceria": {
+            "gaya": "gaya batik pesisiran yang ceria, berani, dan terinspirasi alam bahari seperti dari pekalongan",
+            "warna": "palet warna-warni cerah seperti merah fanta, kuning kunyit, hijau toska, dan biru laut"
+        }
+    };
+
+    // Fungsi untuk mengisi form secara otomatis
+    function applyPreset(styleKey) {
+        const preset = stylePresets[styleKey];
+        if (preset) {
+            document.getElementById('gaya').value = preset.gaya;
+            document.getElementById('warna').value = preset.warna;
+        }
+    }
+
+    // Script untuk loading overlay (tetap sama)
+    document.getElementById('generate-form').addEventListener('submit', function(event) {
+        const elemenInput = document.getElementById('elemen');
+        if (elemenInput.value.trim() === '') {
+            alert('Harap isi Elemen Utama terlebih dahulu.');
+            event.preventDefault(); 
+        } else {
+            const overlay = document.getElementById('loading-overlay');
+            if (overlay) {
+                overlay.style.display = 'flex';
+            }
+        }
+    });
+</script>
+{% endblock %}

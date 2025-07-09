@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+
+{% block title %}Hasil Karya AI Anda{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm text-center">
+            <div class="card-body p-5">
+                <h1 class="card-title mb-4">Ini Dia Hasilnya! ✨</h1>
+                
+                {% if image_url %}
+                    <p class="text-muted">Motif ini bersifat "seamless", bisa disambung tanpa putus.</p>
+                    <img src="{{ image_url }}" class="img-fluid rounded border mt-3" alt="Generated Batik Motif">
+                    <br>
+                    <a href="{{ image_url }}" class="btn btn-success mt-4" download="motif_kainkreator.jpg">Unduh Gambar</a>
+                {% else %}
+                    <p class="text-danger mt-3"><strong>Maaf, terjadi kesalahan.</strong><br>{{ error }}</p>
+                {% endif %}
+                
+                <a href="{{ url_for('create') }}" class="btn btn-primary mt-4 ms-2">Buat Lagi</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

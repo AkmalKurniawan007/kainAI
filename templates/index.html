@@ -1,0 +1,32 @@
+{% extends 'layout.html' %}
+
+{% block title %}Selamat Datang di KainKreator AI{% endblock %}
+
+{% block content %}
+<div class="text-center">
+    <h1>Selamat Datang di KainKreator AI</h1>
+    <p class="lead">Wujudkan imajinasi Anda menjadi motif batik yang unik dan mempesona.</p>
+    <a href="{{ url_for('create') }}" class="btn btn-primary btn-lg my-3">Mulai Mendesain Sekarang!</a>
+</div>
+
+<hr class="my-5">
+
+<h2 class="text-center mb-4">Galeri Inspirasi</h2>
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/output_1750904560.jpg') }}" class="card-img-top" alt="Inspirasi 1">
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/output_1750904620.jpg') }}" class="card-img-top" alt="Inspirasi 2">
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            <img src="{{ url_for('static', filename='images/output_1750904872.jpg') }}" class="card-img-top" alt="Inspirasi 3">
+        </div>
+    </div>
+</div>
+{% endblock %}
