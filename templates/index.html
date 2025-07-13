@@ -1,32 +1,110 @@
 {% extends 'layout.html' %}
 
-{% block title %}Selamat Datang di KainKreator AI{% endblock %}
-
 {% block content %}
-<div class="text-center">
-    <h1>Selamat Datang di KainKreator AI</h1>
-    <p class="lead">Wujudkan imajinasi Anda menjadi motif batik yang unik dan mempesona.</p>
-    <a href="{{ url_for('create') }}" class="btn btn-primary btn-lg my-3">Mulai Mendesain Sekarang!</a>
+<div class="container">
+    <header class="header">
+        <h1>Panduan Pembuatan Motif Batik dengan AI 🎨</h1>
+        <p>Alur kerja profesional untuk menciptakan motif batik yang otentik dan berkualitas tinggi menggunakan teknologi AI.</p>
+    </header>
+
+    <main>
+        <section class="workflow-step">
+            <h2>Langkah 1: Riset dan Kumpulkan Referensi Otentik</h2>
+            <p>Kunci dari motif batik yang baik adalah <strong>keaslian dan filosofinya</strong>. Proyek profesional tidak hanya membuat gambar yang "mirip" batik, tetapi memahami dasarnya.</p>
+            <p>Gunakan database online untuk mendapatkan referensi nama, bentuk, dan detail dari berbagai motif batik Indonesia. Ini akan menjadi dasar untuk prompt Anda.</p>
+            <div class="resource-links">
+                <a href="https://www.kaggle.com/datasets/achmadfaturochman/indonesian-batik-motifs" target="_blank" rel="noopener noreferrer">Kaggle: Indonesian Batik Motifs</a>
+                <a href="https://universe.roboflow.com/batik-classification/motif-batik-classification" target="_blank" rel="noopener noreferrer">Roboflow: Motif Batik Classification</a>
+            </div>
+        </section>
+
+        <section class="workflow-step">
+            <h2>Langkah 2: Pilih AI Generator yang Tepat (Gratis & Profesional)</h2>
+            <p>Untuk kebutuhan profesional seperti membuat pola yang berulang (seamless pattern) dan detail tinggi, berikut adalah rekomendasi terbaik:</p>
+            <ul>
+                <li><strong>Leonardo.Ai:</strong> Kredit gratis harian, banyak model AI, dan fitur "Seamless Tiling" untuk pola berulang.</li>
+                <li><strong>Recraft.ai:</strong> Sangat direkomendasikan untuk desain dan pola. Bisa menghasilkan format vektor (SVG) yang profesional.</li>
+                <li><strong>NightCafe Creator:</strong> Memberikan kredit gratis harian dan mendukung banyak model AI canggih.</li>
+            </ul>
+        </section>
+
+        <section class="workflow-step">
+            <h2>Langkah 3: Buat 'Prompt' yang Detail dan Terstruktur</h2>
+            <p>Ini adalah bagian terpenting. Jangan hanya menulis "motif batik". Agar hasilnya profesional, prompt Anda harus detail dan dalam Bahasa Inggris.</p>
+            <p><strong>Struktur Prompt:</strong> [Style/Jenis Batik], [Motif Utama], [Detail Tambahan], [Komposisi Warna], [Gaya Visual]</p>
+            
+            <div class="prompt-builder">
+                <form action="{{ url_for('generate') }}" method="post" id="prompt-form">
+                    <div class="form-group">
+                        <label for="batik-style">1. Gaya/Jenis Batik:</label>
+                        <input type="text" id="batik-style" value="Indonesian Batik Parang pattern" placeholder="Contoh: Indonesian Batik Parang pattern">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="main-motif">2. Motif Utama & Interpretasi:</label>
+                        <input type="text" id="main-motif" value="modern interpretation, clean lines" placeholder="Contoh: modern interpretation, clean lines">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="details">3. Detail dan Elemen Tambahan:</label>
+                        <input type="text" id="details" value="subtle floral accents" placeholder="Contoh: with subtle floral accents, gold accents">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="colors">4. Komposisi Warna:</label>
+                        <input type="text" id="colors" value="sogan brown and indigo" placeholder="Contoh: sogan brown and indigo, vibrant blue and red">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="visual-style">5. Gaya Visual & Format:</label>
+                        <input type="text" id="visual-style" value="seamless pattern, vector art, high detail" placeholder="Contoh: seamless pattern, vector art, high detail">
+                    </div>
+
+                    <textarea name="prompt" id="full-prompt" style="display:none;"></textarea>
+                    
+                    <div class="generated-prompt">
+                        <strong>Hasil Prompt Anda (siap pakai):</strong>
+                        <textarea id="prompt-preview" rows="3" readonly></textarea>
+                    </div>
+
+                    <button type="submit">Generate Image</button>
+                </form>
+            </div>
+        </section>
+        
+        <section class="workflow-step">
+            <h2>Langkah 4: Iterasi, Seleksi, dan Penyempurnaan</h2>
+            <ol>
+                <li><strong>Generate Banyak Variasi:</strong> Dari satu prompt, hasilkan 4-8 gambar sekaligus.</li>
+                <li><strong>Pilih yang Terbaik:</strong> Pilih 1-2 gambar dengan komposisi dan detail paling mendekati visi Anda.</li>
+                <li><strong>Refine (Sempurnakan):</strong> Gunakan fitur seperti "Upscale" untuk meningkatkan resolusi gambar.</li>
+                <li><strong>Editing Eksternal (Opsional):</strong> Gunakan software gratis seperti <strong>GIMP</strong> atau <strong>Photopea</strong> untuk sentuhan akhir.</li>
+            </ol>
+        </section>
+    </main>
 </div>
 
-<hr class="my-5">
+<script>
+    // Script sederhana untuk menggabungkan semua input menjadi satu prompt
+    const form = document.getElementById('prompt-form');
+    const batikStyle = document.getElementById('batik-style');
+    const mainMotif = document.getElementById('main-motif');
+    const details = document.getElementById('details');
+    const colors = document.getElementById('colors');
+    const visualStyle = document.getElementById('visual-style');
+    const fullPrompt = document.getElementById('full-prompt');
+    const promptPreview = document.getElementById('prompt-preview');
 
-<h2 class="text-center mb-4">Galeri Inspirasi</h2>
-<div class="row">
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            <img src="{{ url_for('static', filename='images/output_1750904560.jpg') }}" class="card-img-top" alt="Inspirasi 1">
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            <img src="{{ url_for('static', filename='images/output_1750904620.jpg') }}" class="card-img-top" alt="Inspirasi 2">
-        </div>
-    </div>
-    <div class="col-md-4 mb-4">
-        <div class="card">
-            <img src="{{ url_for('static', filename='images/output_1750904872.jpg') }}" class="card-img-top" alt="Inspirasi 3">
-        </div>
-    </div>
-</div>
+    function updatePrompt() {
+        const promptValue = `${batikStyle.value}, ${mainMotif.value}, ${details.value}, in ${colors.value} color palette, ${visualStyle.value}`;
+        fullPrompt.value = promptValue;
+        promptPreview.value = promptValue;
+    }
+
+    // Update saat halaman dimuat pertama kali
+    document.addEventListener('DOMContentLoaded', updatePrompt);
+
+    // Update setiap kali ada perubahan pada input
+    form.addEventListener('input', updatePrompt);
+</script>
 {% endblock %}

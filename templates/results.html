@@ -1,26 +1,118 @@
-{% extends 'layout.html' %}
-
-{% block title %}Hasil Karya AI Anda{% endblock %}
-
-{% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow-sm text-center">
-            <div class="card-body p-5">
-                <h1 class="card-title mb-4">Ini Dia Hasilnya! ✨</h1>
-                
-                {% if image_url %}
-                    <p class="text-muted">Motif ini bersifat "seamless", bisa disambung tanpa putus.</p>
-                    <img src="{{ image_url }}" class="img-fluid rounded border mt-3" alt="Generated Batik Motif">
-                    <br>
-                    <a href="{{ image_url }}" class="btn btn-success mt-4" download="motif_kainkreator.jpg">Unduh Gambar</a>
-                {% else %}
-                    <p class="text-danger mt-3"><strong>Maaf, terjadi kesalahan.</strong><br>{{ error }}</p>
-                {% endif %}
-                
-                <a href="{{ url_for('create') }}" class="btn btn-primary mt-4 ms-2">Buat Lagi</a>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil Karya AI Anda</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 700px;
+            text-align: center;
+            background-color: #fff;
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        h1 {
+            color: #2d3748;
+            font-weight: 700;
+        }
+        .image-container {
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .error-message {
+            color: #e53e3e;
+            background-color: #fff5f5;
+            border: 1px solid #fed7d7;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1.5rem;
+            text-align: left;
+        }
+        .prompt-container {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background-color: #f7fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            text-align: left;
+        }
+        .prompt-container p {
+            margin: 0.5rem 0;
+        }
+        .prompt-info {
+            font-size: 0.9rem;
+            color: #4a5568;
+            word-break: break-word;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 2rem;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #4a90e2;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #357abd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        {% if error %}
+            <h1>Oops, Terjadi Kesalahan 🙁</h1>
+            <div class="error-message">
+                <p><strong>Pesan Galat:</strong></p>
+                <p>{{ error }}</p>
             </div>
+        {% else %}
+            <h1>Ini Dia Hasilnya! ✨</h1>
+            <div class="image-container">
+                <img src="{{ image_url }}" alt="Gambar batik yang dihasilkan AI">
+            </div>
+        {% endif %}
+
+        {% if elemen or enhanced_prompt %}
+        <div class="prompt-container">
+            {% if elemen %}
+            <p><strong>Elemen Awal Anda:</strong> {{ elemen }}</p>
+            {% endif %}
+            {% if enhanced_prompt %}
+            <p><strong>Prompt yang Dibuat oleh AI (Gemini):</strong></p>
+            <p class="prompt-info"><em>{{ enhanced_prompt }}</em></p>
+            {% endif %}
         </div>
+        {% endif %}
+
+        <a href="{{ url_for('create') }}" class="button">Buat Lagi</a>
     </div>
-</div>
-{% endblock %}
+</body>
+</html>

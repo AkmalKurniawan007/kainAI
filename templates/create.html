@@ -1,96 +1,120 @@
-{% extends 'layout.html' %}
-{% block title %}Buat Motif Batik Kustom{% endblock %}
-{% block content %}
-
-<div id="loading-overlay" style="display: none;">
-    <div id="loading-spinner"></div>
-    <p id="loading-text">AI Sedang Melukis...</p>
-</div>
-
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card shadow-sm">
-            <div class="card-body p-5">
-                <form id="generate-form" action="{{ url_for('generate') }}" method="post">
-                    
-                    <div class="text-center">
-                        <h1 class="card-title mb-2">Kanvas Digital AI</h1>
-                        <p class="text-muted mb-4">Gunakan preset untuk memulai, lalu sesuaikan sesuka Anda.</p>
-                    </div>
-
-                    <div class="mb-4 text-center">
-                        <label class="form-label fs-5"><strong>Mulai dengan Preset Gaya:</strong></label>
-                        <br>
-                        <button type="button" onclick="applyPreset('klasik-sogan')" class="btn btn-outline-dark m-1">Klasik Sogan</button>
-                        <button type="button" onclick="applyPreset('mega-mendung')" class="btn btn-outline-primary m-1">Mega Mendung</button>
-                        <button type="button" onclick="applyPreset('pesisir-ceria')" class="btn btn-outline-danger m-1">Pesisir Ceria</button>
-                    </div>
-
-                    <hr>
-
-                    <h2 class="text-center mb-4 mt-4">Detail Motif Anda</h2>
-                    <div class="mb-3">
-                        <label for="elemen" class="form-label"><strong>Elemen Utama</strong></label>
-                        <input type="text" class="form-control" id="elemen" name="elemen" placeholder="Contoh: Kura-kura dan rumput laut" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="gaya" class="form-label"><strong>Gaya Desain</strong></label>
-                        <input type="text" class="form-control" id="gaya" name="gaya" placeholder="Contoh: Gaya batik sogan klasik khas keraton" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="warna" class="form-label"><strong>Palet Warna</strong></label>
-                        <input type="text" class="form-control" id="warna" name="warna" placeholder="Contoh: Coklat sogan, krem, hitam" required>
-                    </div>
-
-                    <div class="d-grid mt-4">
-                        <button id="submit-button" type="submit" class="btn btn-primary btn-lg">
-                            Ciptakan Karya!
-                        </button>
-                    </div>
-                </form>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KainKreator AI - Buat Motif Batik</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 2rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #fff;
+            padding: 2rem 3rem;
+            border-radius: 12px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+        h1 {
+            text-align: center;
+            color: #2d3748;
+            margin-bottom: 2rem;
+            font-weight: 700;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #4a5568;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input[type="text"]:focus, select:focus {
+            outline: none;
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border: none;
+            border-radius: 8px;
+            background-color: #4a90e2;
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.2s;
+        }
+        .button:hover {
+            background-color: #357abd;
+        }
+        footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: #718096;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Buat Motif Batik AI ✨</h1>
+        <p style="text-align: center; margin-top: -1rem; margin-bottom: 2rem; color: #718096;">Ditenagai oleh Gemini & Stable Diffusion</p>
+        <form action="{{ url_for('generate') }}" method="POST">
+            <div class="form-group">
+                <label for="elemen">1. Masukkan Elemen Utama</label>
+                <input type="text" id="elemen" name="elemen" placeholder="Contoh: naga, bunga melati, burung garuda" required>
             </div>
-        </div>
+            
+            <div class="form-group">
+                <label for="style_choice">2. Pilih Gaya & Warna Batik</label>
+                <select id="style_choice" name="style_choice" required>
+                    <option value="" disabled selected>-- Pilih Gaya --</option>
+                    {% for key, style in styles.items() %}
+                    <option value="{{ key }}">{{ style.nama }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="model_choice">3. Pilih Model AI (Untuk Menggambar)</label>
+                <select id="model_choice" name="model_choice" required>
+                    <option value="" disabled selected>-- Pilih Model --</option>
+                    {% for key, name in models.items() %}
+                    <option value="{{ key }}">{{ key.replace('-', ' ')|title }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="button">Buat Karya Seni!</button>
+        </form>
+        <footer>
+            <p>&copy; 2025 KainKreator AI</p>
+        </footer>
     </div>
-</div>
-
-<script>
-    // Kamus preset gaya kita, sekarang berada di JavaScript
-    const stylePresets = {
-        "klasik-sogan": {
-            "gaya": "gaya batik sogan klasik khas keraton solo dan yogyakarta, sangat detail dan agung",
-            "warna": "palet warna coklat sogan, krem gading, dan hitam pekat"
-        },
-        "mega-mendung": {
-            "gaya": "gaya mega mendung cirebon dengan sentuhan modern dan garis yang bersih",
-            "warna": "palet warna gradasi biru langit, biru tua, dan putih awan bersih"
-        },
-        "pesisir-ceria": {
-            "gaya": "gaya batik pesisiran yang ceria, berani, dan terinspirasi alam bahari seperti dari pekalongan",
-            "warna": "palet warna-warni cerah seperti merah fanta, kuning kunyit, hijau toska, dan biru laut"
-        }
-    };
-
-    // Fungsi untuk mengisi form secara otomatis
-    function applyPreset(styleKey) {
-        const preset = stylePresets[styleKey];
-        if (preset) {
-            document.getElementById('gaya').value = preset.gaya;
-            document.getElementById('warna').value = preset.warna;
-        }
-    }
-
-    // Script untuk loading overlay (tetap sama)
-    document.getElementById('generate-form').addEventListener('submit', function(event) {
-        const elemenInput = document.getElementById('elemen');
-        if (elemenInput.value.trim() === '') {
-            alert('Harap isi Elemen Utama terlebih dahulu.');
-            event.preventDefault(); 
-        } else {
-            const overlay = document.getElementById('loading-overlay');
-            if (overlay) {
-                overlay.style.display = 'flex';
-            }
-        }
-    });
-</script>
-{% endblock %}
+</body>
+</html>
